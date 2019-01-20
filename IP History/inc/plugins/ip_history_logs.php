@@ -17,9 +17,9 @@ function ip_history_logs_info()
 	return array(
 		"name" => "IP History",
 		"description" => "This keeps a record of a users IP history as they use the website. This is useful for auditing fraud/ban evaders/general/when people start using VPNS/Proxys during their user activity. It can record every instance of a users IP when it changes and how often, the page they were viewing and their useragent.",
-		"website" => "",
+		"website" => "https://github.com/JeremyCrookshank/IP_History_Logs",
 		"author" => "Jeremy Crookshank",
-		"authorsite" => "",
+		"authorsite" => "https://github.com/JeremyCrookshank/IP_History_Logs",
 		"version" => "1.0",
 		"guid" => "",
 		"compatibility" => "*"
