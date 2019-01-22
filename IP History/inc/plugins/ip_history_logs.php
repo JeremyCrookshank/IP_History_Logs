@@ -29,7 +29,7 @@ function ip_history_logs_info()
 function ip_history_logs_admin_menu($sub_menu)
 {
 	// We can add ours to the bottom of logs list
-	$key = count($sub_menu) + 1; 
+	$key = count($sub_menu) * 10 + 10;
     $sub_menu[$key] = array('id' => 'ip_history_logs', 'title' => 'IP History Logs', 'link' => 'index.php?module=tools-ip_history_logs');
     return $sub_menu;
 }

@@ -51,6 +51,10 @@ $(document).ready(function() {
     background: inherit !important;
 }
 
+.menu {
+    display: initial !important;
+}
+
 </style>
 	<?php
 
