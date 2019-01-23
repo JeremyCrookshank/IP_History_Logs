@@ -20,7 +20,7 @@ function ip_history_logs_info()
 		"website" => "https://github.com/JeremyCrookshank/IP_History_Logs",
 		"author" => "Jeremy Crookshank",
 		"authorsite" => "https://github.com/JeremyCrookshank/IP_History_Logs",
-		"version" => "1.0",
+		"version" => "1.02",
 		"guid" => "",
 		"compatibility" => "*"
 	);
@@ -59,32 +59,33 @@ function ip_history_logs_record_ip()
 	global $db, $mybb;
 	$ip = filter_input(INPUT_SERVER, 'REMOTE_ADDR');
 	$user = $mybb->user['uid'];
-	$useragent = $_SERVER['HTTP_USER_AGENT'];
+	$useragent = $db->escape_string($_SERVER['HTTP_USER_AGENT']);
 	$page = basename($_SERVER['REQUEST_URI']);
 
 	//Make sure they're logged in
 	if ($user != 0) {
-		if ($mybb->settings['enable_uniqueIP'] == 1) {
+		if ($mybb->settings['enable_uniqueIP'] == 1 || $mybb->settings['enable_uniqueUA'] == 1 ) {
 			$ip_event = array(
 				"ip" => $ip,
 				"uid" => $user
 			);
 
 			// Optionals
-
 			if ($mybb->settings['enable_useragentrecord'] == 1) {
-				$ip_event["useragent"] = $db->escape_string($useragent);
+				$ip_event["useragent"] = $useragent;
 			}
 
 			if ($mybb->settings['enable_pagerecording'] == 1) {
 				$ip_event["page"] = $db->escape_string($page);
 			}
 
-			// Check the user hasn't had this IP before
+			// Check the user hasn't had this IP/UA before
 
-			$query = $db->simple_select("ip_history", "COUNT(*) as 'unique'", "IP='$ip'", array());
-			$unique = $db->fetch_field($query, "unique");
-			if ($unique == 0) {
+			$query = $db->simple_select("ip_history", "COUNT(*) as 'unique'", "IP='$ip' AND uid='$user'", array());
+			$uniqueIP = $db->fetch_field($query, "unique");
+			$query = $db->simple_select("ip_history", "COUNT(*) as 'unique'", "useragent='$useragent' AND uid='$user'", array());
+			$uniqueUA = $db->fetch_field($query, "unique");
+			if ($uniqueIP == 0 || $uniqueUA == 0) {
 				$db->insert_query("ip_history", $ip_event);
 			}
 			else {
@@ -174,6 +175,15 @@ function ip_history_logs_install()
 			'value' => 365,
 			'disporder' => 4
 		) ,
+		
+			'enable_uniqueUA' => array(
+			'title' => 'Record User Agent',
+			'description' => "Record the users unique user agent every time it changes.",
+			'optionscode' => 'yesno',
+			'value' => 1,
+			'disporder' => 5
+		) ,
+		
 	);
 	foreach($setting_array as $name => $setting) {
 		$setting['name'] = $name;
@@ -198,8 +208,7 @@ function ip_history_logs_uninstall()
 {
 	global $db;
 	$db->write_query("DROP TABLE " . TABLE_PREFIX . "ip_history");
-	$db->write_query("DROP INDEX IDX_IP ON " . TABLE_PREFIX . "ip_history");
-	$db->delete_query('settings', "name IN ('enable_pagerecording','enable_uniqueIP','enable_useragentrecord')");
+	$db->delete_query('settings', "name IN ('enable_pagerecording','enable_uniqueIP','enable_useragentrecord', 'ip_history_rem_date' , 'enable_uniqueUA')");
 	$db->delete_query('settinggroups', "name = 'ip_history_logs'");
 	rebuild_settings();
 }
