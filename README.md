@@ -11,6 +11,8 @@ Instruction:
 5. Enable plugin.
 6. Configure as Desired
 7. View IP logs under Tools & Maintenance
-. Ensure that you have appopriate permissions to view the logs MyBB admin area goto Users & Groups. Click Admin Permissions on the left side bar. Click your admin profile then options -> Edit Permissions.
+8.Ensure that you have appopriate permissions to view the logs MyBB admin area goto Users & Groups. Click Admin Permissions on the left side bar. Click your admin profile then options -> Edit Permissions.
 
 Then goto the Tools & Maintenance tab and ensure that "Ability to view Users IP History" is ticked yes.
+
+Let me know if there's any more suggestions/errors. And as usual for more updates/news on my developments follow me on twitter: https://twitter.com/_JCrookshank
