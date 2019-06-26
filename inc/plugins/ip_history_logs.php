@@ -20,7 +20,7 @@ function ip_history_logs_info()
 		"website" => "https://github.com/JeremyCrookshank/IP_History_Logs",
 		"author" => "Jeremy Crookshank",
 		"authorsite" => "https://github.com/JeremyCrookshank/IP_History_Logs",
-		"version" => "1.1.0",
+		"version" => "1.2.0",
 		"guid" => "",
 		"compatibility" => "*"
 	);
@@ -68,7 +68,7 @@ function ip_history_logs_record_ip()
 			$ip_event = array(
 				"ip" => $ip,
 				"uid" => $user,
-				"date" => (int) TIME_NOW
+				"createdate" => (int) TIME_NOW
 			);
 
 			// Optionals
@@ -123,13 +123,13 @@ function ip_history_logs_install()
 	// Optimised for storing and retrieving IPV4 & IPV6 in an efficent manner
 	// Storing date in UTC now for efficency and greate compatibility with older MYSQL DB's
 	$db->write_query("CREATE TABLE IF NOT EXISTS `".TABLE_PREFIX."ip_history` (
-      `id` int(10) UNSIGNED NOT NULL auto_increment,
-      `uid` int(10) UNSIGNED NOT NULL DEFAULT '0',
-      `ip` VARBINARY(16) NOT NULL,
-      `page` VARCHAR(512) NULL,
-	  `useragent` varchar(255) NULL,
-	  `date` int(10) UNSIGNED NOT NULL DEFAULT '0',
-      PRIMARY KEY  (`id`)
+      ipid int(10) UNSIGNED NOT NULL auto_increment,
+      uid int(10) UNSIGNED NOT NULL DEFAULT '0',
+      ip VARBINARY(16) NOT NULL,
+      page VARCHAR(512) NULL,
+	  useragent varchar(255) NULL,
+	  createdate int(10) UNSIGNED NOT NULL DEFAULT '0',
+      PRIMARY KEY  (`ipid`)
     ) ENGINE=MyISAM  
       COLLATE=utf8_general_ci
 	  DEFAULT CHARSET=utf8;

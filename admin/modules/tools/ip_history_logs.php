@@ -61,14 +61,28 @@ $(document).ready(function() {
 	
 	// Default Query Params
 	$where = 'WHERE 1=1';
+	$prunewhere = '1=1';
 	$limit = 1500;
+
+
 	
 	// If we're searching for a userid
 	if($mybb->input['uid'])
 	{
-		$where .= " AND ip`.uid='".$mybb->get_input('uid', MyBB::INPUT_INT)."'";
+		$where .= " AND ip.uid='".$mybb->get_input('uid', MyBB::INPUT_INT)."'";
+		$prunewhere .= " AND uid='".$mybb->get_input('uid', MyBB::INPUT_INT)."'";
 	}
 	
+	// If we're pruning a user/all users
+	if($mybb->input['action'] == "prune" && $mybb->request_method == "post") 
+	{
+ 		$query = $db->delete_query("ip_history", $prunewhere);
+ 		$num_deleted = $db->affected_rows();
+ 		log_admin_action($num_deleted);
+		flash_message('Deleted '.$num_deleted.' Rows', 'success');
+		admin_redirect("index.php?module=tools-ip_history_logs");
+	}
+
 	// Max number of results
 	if($mybb->input['limit'])
 	{	
@@ -88,7 +102,7 @@ $(document).ready(function() {
 			$sortby = "ip.page";
 			break;
 		default:
-			$sortby = "ip.date";
+			$sortby = "ip.createdate";
 	}
 	
 	$order = 'asc';
@@ -98,7 +112,7 @@ $(document).ready(function() {
 	}
 		
 	// Have to use this instead as MyBB Simple Select as it doesn't support inner joins
-	$query = $db->query("SELECT u.username, ip.uid, ip.ip, ip.page, ip.useragent, ip.date FROM ".TABLE_PREFIX."ip_history ip 
+	$query = $db->query("SELECT u.username, ip.uid, ip.ip, ip.page, ip.useragent, ip.createdate FROM ".TABLE_PREFIX."ip_history ip 
 	INNER JOIN ".TABLE_PREFIX."users u ON (ip.uid = u.uid) 
 	{$where}
 	ORDER BY {$sortby} {$order}
@@ -184,6 +198,19 @@ while($section = $db->fetch_array($query))
 	$buttons[] = $form->generate_submit_button('Filter IP History');
 	$form->output_submit_wrapper($buttons);
 	$form->end();
+
+?>
+
+</br>
+<?php
+
+	$prune = new Form("index.php?module=tools-ip_history_logs&amp;action=prune", "post");
+	$form_container = new FormContainer('Prune IP History');
+	$form_container->output_row('Username', "", $prune->generate_select_box('uid', $user_options, $mybb->input['uid'], array('id' => 'uid')), 'uid');
+	$form_container->end();
+	$prunebtn[] = $prune->generate_submit_button('Prune');
+	$prune->output_submit_wrapper($prunebtn);
+	$prune->end();
 
 	$page->output_footer();
 
