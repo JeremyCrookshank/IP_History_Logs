@@ -135,7 +135,7 @@ while($section = $db->fetch_array($query))
 		$table->construct_cell("<strong><a href=\"/{$section['page']}\">{$section['page']}</a></strong>");
 		$table->construct_cell(htmlspecialchars_uni($section['useragent']));
 		$table->construct_cell($section['ip'], array("class" => "align_center", "width" => '90'));
-		$table->construct_cell(my_date('relative',$section['date'], '', 2), array("class" => "align_center", "width" => '90'));
+		$table->construct_cell(my_date('relative',$section['createdate'], '', 2), array("class" => "align_center", "width" => '90'));
 		$table->construct_row();
 	}
 
