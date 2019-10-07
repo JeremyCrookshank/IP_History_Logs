@@ -64,7 +64,19 @@ $(document).ready(function() {
 	$prunewhere = '1=1';
 	$limit = 1500;
 
+	function isBinary($str) {
+    return preg_match('~[^\x20-\x7E\t\r\n]~', $str) > 0;
+	}
 
+	// This will allow us to handle old IP's(text) and binary ones
+	function HandleIP($IP) {
+
+		if (isBinary($IP)) {
+		return my_inet_ntop($IP);
+		} else {
+			return $IP;
+		}
+	}
 	
 	// If we're searching for a userid
 	if($mybb->input['uid'])
@@ -134,7 +146,7 @@ while($section = $db->fetch_array($query))
 		$table->construct_cell("<a target='_blank' href=\"/member.php?action=profile&uid={$section['uid']}\">{$section['uid']}</a>", array("class" => "align_center", "width" => '60'));
 		$table->construct_cell("<strong><a href=\"/{$section['page']}\">{$section['page']}</a></strong>");
 		$table->construct_cell(htmlspecialchars_uni($section['useragent']));
-		$table->construct_cell($section['ip'], array("class" => "align_center", "width" => '90'));
+		$table->construct_cell(HandleIP($section['ip']), array("class" => "align_center", "width" => '90'));
 		$table->construct_cell(my_date('relative',$section['createdate'], '', 2), array("class" => "align_center", "width" => '90'));
 		$table->construct_row();
 	}
