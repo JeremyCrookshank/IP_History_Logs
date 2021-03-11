@@ -142,9 +142,9 @@ $(document).ready(function() {
 while($section = $db->fetch_array($query))
 	{
 	    $username = htmlspecialchars_uni($section['username']);
-		$table->construct_cell("<a target='_blank' href=\"/member.php?action=profile&uid={$section['uid']}\">$username</a>", array("class" => "align_center", "width" => '60'));
-		$table->construct_cell("<a target='_blank' href=\"/member.php?action=profile&uid={$section['uid']}\">{$section['uid']}</a>", array("class" => "align_center", "width" => '60'));
-		$table->construct_cell("<strong><a href=\"/{$section['page']}\">{$section['page']}</a></strong>");
+		$table->construct_cell("<a target='_blank' href=\"{$mybb->settings['bburl']}/member.php?action=profile&uid={$section['uid']}\">$username</a>", array("class" => "align_center", "width" => '60'));
+		$table->construct_cell("<a target='_blank' href=\"{$mybb->settings['bburl']}/member.php?action=profile&uid={$section['uid']}\">{$section['uid']}</a>", array("class" => "align_center", "width" => '60'));
+		$table->construct_cell("<strong><a href=\"{$mybb->settings['bburl']}/{$section['page']}\">{$section['page']}</a></strong>");
 		$table->construct_cell(htmlspecialchars_uni($section['useragent']));
 		$table->construct_cell(HandleIP($section['ip']), array("class" => "align_center", "width" => '90'));
 		$table->construct_cell(my_date('relative',$section['createdate'], '', 2), array("class" => "align_center", "width" => '90'));
