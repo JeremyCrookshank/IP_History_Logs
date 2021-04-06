@@ -20,7 +20,7 @@ function ip_history_logs_info()
 		"website" => "https://github.com/JeremyCrookshank/IP_History_Logs",
 		"author" => "Jeremy Crookshank",
 		"authorsite" => "https://github.com/JeremyCrookshank/IP_History_Logs",
-		"version" => "1.4.0",
+		"version" => "1.4.1",
 		"guid" => "",
 		"compatibility" => "*"
 	);
