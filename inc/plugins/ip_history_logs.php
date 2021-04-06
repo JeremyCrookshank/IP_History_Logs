@@ -220,7 +220,7 @@ function ip_history_logs_activate()
 	$new_task = array(
 		"title"			=> "IP History Log Removal",
 		"description"	=> "Automatically remove IP history logs based on days elapsed. Configured in settings.",
-		"file"			=> "ip_history",
+		"file"			=> "ip_history_logs",
 		"minute"		=> "0",
 		"hour"			=> "0",
 		"day"			=> "*",
