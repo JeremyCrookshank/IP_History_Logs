@@ -70,9 +70,9 @@ $(document).ready(function() {
 
 	// This will allow us to handle old IP's(text) and binary ones
 	function HandleIP($IP) {
-
+	    global $db;
 		if (isBinary($IP)) {
-		return my_inet_ntop($IP);
+		return my_inet_ntop($db->unescape_binary($IP));
 		} else {
 			return $IP;
 		}

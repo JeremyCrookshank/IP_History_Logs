@@ -57,7 +57,7 @@ function ip_history_logs_record_ip()
 
 	//Get basic session infomation
 	global $db, $mybb;
-	$ip = my_inet_pton(get_ip());
+	$ip = $db->escape_binary(my_inet_pton(filter_input(INPUT_SERVER, 'REMOTE_ADDR')));
 	$user = $mybb->user['uid'];
 	$useragent = $db->escape_string($_SERVER['HTTP_USER_AGENT']);
 	$page = basename($_SERVER['REQUEST_URI']);
