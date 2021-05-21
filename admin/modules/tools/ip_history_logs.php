@@ -72,7 +72,7 @@ $(document).ready(function() {
 	function HandleIP($IP) {
 	    global $db;
 		$isValid = filter_var($IP, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
-		if (isBinary($IP) || !isValid) {
+		if (isBinary($IP) || !$isValid) {
 		return my_inet_ntop($db->unescape_binary($IP));
 		} else {
 			return $IP;
