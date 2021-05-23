@@ -70,9 +70,10 @@ $(document).ready(function() {
 
 	// This will allow us to handle old IP's(text) and binary ones
 	function HandleIP($IP) {
-
-		if (isBinary($IP)) {
-		return my_inet_ntop($IP);
+	    global $db;
+		$isValid = filter_var($IP, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
+		if (isBinary($IP) || !$isValid) {
+		return my_inet_ntop($db->unescape_binary($IP));
 		} else {
 			return $IP;
 		}
