@@ -20,7 +20,7 @@ function ip_history_logs_info()
 		"website" => "https://github.com/JeremyCrookshank/IP_History_Logs",
 		"author" => "Jeremy Crookshank",
 		"authorsite" => "https://github.com/JeremyCrookshank/IP_History_Logs",
-		"version" => "1.4.2",
+		"version" => "1.4.3",
 		"guid" => "",
 		"compatibility" => "*"
 	);
@@ -49,7 +49,6 @@ function ip_history_logs_admin_permissions($admin_permissions)
 
 function ip_history_logs_record_ip()
 {
-
 	// Restore Visitors IP if using CloudFlare
 	if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
   	$_SERVER['REMOTE_ADDR'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
@@ -57,7 +56,11 @@ function ip_history_logs_record_ip()
 
 	//Get basic session infomation
 	global $db, $mybb;
-	$ip = $db->escape_string($db->escape_binary(my_inet_pton(filter_input(INPUT_SERVER, 'REMOTE_ADDR'))));
+
+	//MyBB will escape binary automatically unless we whitelist it here
+	$mybb->binary_fields['ip_history'] = ['ip' => true];
+
+	$ip = $db->escape_binary(my_inet_pton(filter_input(INPUT_SERVER, 'REMOTE_ADDR')));
 	$user = $mybb->user['uid'];
 	$useragent = $db->escape_string($_SERVER['HTTP_USER_AGENT']);
 	$page = basename($_SERVER['REQUEST_URI']);
@@ -81,9 +84,9 @@ function ip_history_logs_record_ip()
 			}
 
 			// Check the user hasn't had this IP/UA before
-
-			$query = $db->simple_select("ip_history", "COUNT(*) as 'unique'", "IP='$ip' AND uid='$user'", array());
+			$query = $db->simple_select("ip_history", "COUNT(*) as 'unique'", "IP=$ip AND uid='$user'", array());
 			$uniqueIP = $db->fetch_field($query, "unique");
+			
 			$query = $db->simple_select("ip_history", "COUNT(*) as 'unique'", "useragent='$useragent' AND uid='$user'", array());
 			$uniqueUA = $db->fetch_field($query, "unique");
 			if ($uniqueIP == 0 || $uniqueUA == 0) {
@@ -120,6 +123,10 @@ function ip_history_logs_record_ip()
 function ip_history_logs_install()
 {
 	global $db, $mybb;
+
+	//MyBB will escape binary automatically unless we whitelist it here
+    $mybb->binary_fields['ip_history'] = ['ip' => true];
+
 	// Optimised for storing and retrieving IPV4 & IPV6 in an efficent manner
 	// Storing date in UTC now for efficency and greate compatibility with older MYSQL DB's
 	$db->write_query("CREATE TABLE IF NOT EXISTS `".TABLE_PREFIX."ip_history` (
